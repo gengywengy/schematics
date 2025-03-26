@@ -1,10 +1,14 @@
 package dev.gengy.schematics
 
+import dev.gengy.schematics.PasteSettings.PasteType
 import dev.gengy.schematics.world.Block
 import dev.gengy.schematics.world.BlockEntity
 import dev.gengy.schematics.world.BlockPos
 import net.kyori.adventure.nbt.BinaryTagIO
 import net.kyori.adventure.nbt.CompoundBinaryTag
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
 import java.io.File
 import java.io.FileInputStream
 
@@ -51,4 +55,25 @@ class Schematic(
         val blocks: Set<Block>,
         val blockEntities: Set<BlockEntity>
     )
+
+    fun paste(location: Location, settings: PasteSettings = PasteSettings(
+        type = PasteType.BUKKIT,
+    )) {
+        val locX = location.x
+        val locY = location.y
+        val locZ = location.z
+        val world = location.world
+
+        when (settings.type) {
+            PasteType.NMS -> {}
+            PasteType.BUKKIT -> {
+                blocks.blocks.forEach { block ->
+                    val pos = Location(world, locX + block.position.x.toDouble(), locY + block.position.y.toDouble(), locZ + block.position.z.toDouble())
+                    val data = Bukkit.getServer().createBlockData(block.blockState)
+                    pos.block.blockData = data
+                }
+            }
+        }
+
+    }
 }
