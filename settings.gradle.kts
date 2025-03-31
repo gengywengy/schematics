@@ -5,6 +5,7 @@ rootProject.name = "schem"
 
 include(":api")
 include(
+    ":spigot:api",
     ":spigot:common",
     ":spigot:1_21_R1"
 )
